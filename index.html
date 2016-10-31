@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>AngularUP 2016</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section data-background-image="http://angular-up.com/img/sections-background/hero.jpg">
+					<img src="http://angular-up.com/img/sprites/angularup-light.png" style="width: 35%; opacity: 0.8">
+					<h1>Widgets development</h1>
+					<h3>with Angular 2</h3>
+					<br>
+					<p style="font-size: 25px">Pawel Kozlowski (<a href="https://twitter.com/pkozlowski_os" target="_blank">@pkozlowski_os</a>)</p>
+				</section>
+
+				<section data-background-image="img/components.png">
+					<h1>Widgets</h1>
+				</section>
+
+				<section data-background-image="img/ui-bootstrap.png">
+					<img src="img/ng-bootstrap-logo.svg">
+					<h2>https://ng-bootstrap.github.io</h2>
+				</section>
+
+				<section data-background-image="img/native.jpg">
+					<h1>Native</h1>
+				</section>
+
+				<section data-background-image="http://www.greenpowerresearch.com/wp-content/uploads/2011/11/power-cord-dreamstimefree_1786343.jpg">
+					<h1>Pluggable</h1>
+				</section>
+
+				<section data-background-image="img/travis-ci-testing.png">
+					<h1>Tested</h1>
+				</section>
+
+				<section data-background-image="img/climb_next_level_640x320.jpg">
+					<h1>Next level</h1>
+					<img src="img/angular.svg" style="width: 45%">
+				</section>
+
+				<section>
+					<h1>(Un)clear semantics</h1>
+					<h4>Bindings</h4>
+                    <pre style="font-size: 0.7em"><code>&lt;div uib-tooltip="exp"&gt;
+&lt;div uib-tooltip="{{exp}}"&gt;
+&lt;div uib-tooltip="Static text"&gt;</code></pre>
+                    <h4>Mixed case names</h4>
+                    <pre style="font-size: 0.7em"><code>&lt;div uib-tooltip="..."&gt
+&lt;div uibTooltip="..."&gt;</code></pre>
+				</section>
+
+				<section>
+                    <img src="img/ui_bootstrap_reading_doc.png" alt="">
+                </section>
+
+				<section>
+					<h1>Clear semantics</h1>
+                    <pre style="font-size: 1.2em"><code>&lt;div [ngbTooltip]="exp"&gt;
+&lt;div ngbTooltip="Static text"&gt;</code></pre>
+				</section>
+
+				<section>
+					<h1>Inert &lt;template&gt;</h1>
+					<img src="img/ng_tabs.gif" style="border-radius: 10px;">
+<pre><code>&lt;uib-tabset&gt;
+    &lt;uib-tab title="Simple"&gt;Some simple text&lt;/uib-tab&gt;
+    &lt;uib-tab title="Expensive stuff"&gt;
+      &lt;very-expensive-stuff&gt;&lt;/very-expensive-stuff&gt;
+    &lt;/uib-tab&gt;
+&lt;/uib-tabset&gt;</code></pre>
+				</section>
+
+				<section>
+					<h1>Inert &lt;template&gt;</h1>
+<pre><code>&lt;ngb-tabset&gt;
+  &lt;ngb-tab title="Simple"&gt;
+    &lt;template ngbTabContent&gt;Some simple text&lt;/template&gt;
+  &lt;/ngb-tab&gt;
+  &lt;ngb-tab title="Expensive stuff"&gt;
+    &lt;template ngbTabContent&gt;
+      &lt;very-expensive-stuff&gt;&lt;/&lt;very-expensive-stuff&gt;
+    &lt;/template&gt;
+  &lt;/ngb-tab&gt;
+&lt;/ngb-tabset&gt;</code></pre>
+				</section>
+
+				<section>
+					<h1>Reactive parenting</h1>
+<pre><code>@Component({
+  template: `
+    &lt;ul [class]="'nav nav-' + type" role="tablist"&gt;
+      &lt;li class="nav-item" *ngFor="let tab of tabs"&gt;...&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="tab-content"&gt;
+      &lt;template ngFor let-tab [ngForOf]="tabs"&gt;
+        ...
+      &lt;/template&gt;
+    &lt;/div&gt;`
+})
+export class NgbTabset implements AfterContentChecked {
+
+  @ContentChildren(NgbTab) tabs: QueryList&lt;NgbTab&gt;;
+  ...
+}</code></pre>
+				</section>
+
+				<section>
+					<h1>Exported instances</h1>
+					<img src="img/ng_tooltip.gif" style="border-radius: 10px; box-shadow: 15px 15px 20px -1px rgba(1,1,1,0.75); opacity: 0.9">
+<pre style="font-size: 0.9em"><code>&lt;button ngbTooltip="Hint!"&gt;
+  I've got a tip!
+&lt;/button&gt;</code></pre>
+				</section>
+
+				<section>
+					<h1>Exported instances</h1>
+					<h4>code</h4>
+					<pre><code>@Directive({selector: '[ngbTooltip]', exportAs: 'ngbTooltip'})
+export class NgbTooltip implements OnInit, OnDestroy
+
+  toggle(): void {
+    ...
+  }
+}</code></pre>
+				<h4>usage</h4>
+					<pre><code>&lt;button ngbTooltip="Hint!" #t="ngbTooltip" (click)="t.toggle()"&gt;
+  I've got a tip!
+&lt;/button&gt;</code></pre>
+				</section>
+
+				<section data-background-image="img/rusty_pipe.jpg">
+					<h1>CSS encapsulation</h1>
+				</section>
+
+				<section>
+					<h1>CSS encapsulation</h1>
+					<pre style="font-size: 0.7em"><code>@Component({
+  selector: '[ngbDatepickerNavigation]',
+  styles: [`
+    td {
+      text-align: center;
+      padding-bottom: 0.25rem;
+    }
+  `],
+  ...
+ })
+ export class NgbDatepickerNavigation {
+  ..
+ }</code></pre>
+				</section>
+
+				<section data-background-image="img/rxjs.svg">
+					<h1>RxJS</h1>
+					<img src="img/ng_typeahead.gif" alt="">
+				</section>
+
+                <section>
+                    <h2>RxJS-powered typeahead</h2>
+					<pre style="font-size: 0.65em"><code>&lt;input [(ngModel)]="state" [ngbTypeahead]="findState" /&gt;</code></pre>
+					<pre><code> findState = (userInput$: Observable&lt;string>) => userInput$
+  .filter(term => term.length > 2)
+  .debounceTime(200)
+  .distinctUntilChanged()
+  .map(term => new RegExp(term, 'gi').test(state));</code></pre>
+                </section>
+
+				<section data-background-image="img/stable.jpg">
+					<h1><code>ngZone.onStable</code></h1>
+					<pre style="font-size: 0.75em"><code>ngZone.onStable.subscribe(() => {
+  if (this._isPopoverOpen()) {
+    positionElements(
+        this._elementRef.nativeElement,
+        this._windowRef.location.nativeElement,
+        this.placement);
+  }
+});</code></pre>
+				</section>
+
+				<section data-background-image="img/sugar.jpg">
+					<h1>Sweet!</h1>
+						<pre style="font-size: 0.9em"><code>(keyup.arrowLeft)="previousSlide()"</code></pre>
+						<pre style="font-size: 0.9em"><code>(document:click)="closeOthers($vent)"</code></pre>
+						<pre style="font-size: 0.9em"><code>[class.active]="isOpen(panel.id)"</code></pre>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Does it all matter?</h1>
+					<h4>Tabset (300 vs. 150 LOC)</h4>
+					<img src="img/tabs_loc.svg" alt="">
+					<h4>Typeahead (20 vs. 8 items on the API surface)</h4>
+					<p>	</p>
+					<img src="img/typeahead_api.svg" alt="">
+				</section>
+
+				<section data-background-image="img/fast.jpg">
+					<h1>Performance</h1>
+					<pre><code>@Component({
+  selector: 'ngb-pagination',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `...`
+})
+export class NgbPagination implements OnChanges {
+  ...
+}
+</code></pre>
+				</section>
+
+				<section data-background-image="img/ng-bootstrap-universal.png">
+					<h1>Server-side rendering</h1>
+				</section>
+
+				<section data-background-image="img/animations.jpg">
+					<h1>Animations</h1>
+				</section>
+
+				<section data-background-image="img/toolkit.jpg">
+					<h1>UI toolkit</h1>
+				</section>
+
+				<section>
+					<h1><code>PresentationRef</code></h1>
+					<ul>
+						<li><a href="https://pkozlowski-opensource.github.io/angular-up-2016" target="_blank">https://pkozlowski-opensource.github.io/angular-up-2016</a></li>
+						<li><a href="https://ng-bootstrap.github.io" target="_blank">https://ng-bootstrap.github.io</a></li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Thank you!</h1>
+					<p style="font-size: 36px">Pawel Kozlowski (<a href="https://twitter.com/pkozlowski_os" target="_blank">@pkozlowski_os</a>)</p>
+				</section>
+			</div>
+
+		</div>
+
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				history: true,
+			 	backgroundTransition: 'none', //'concave',
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
